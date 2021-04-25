@@ -39,18 +39,35 @@ Key.onTimer = function(self, object, properties)
 	end
 end
 
-Key.to = function(self, object, properties, increment, timeline)
+Key.to = function(self, object, properties, immediate, timeline)
 	self.increment = increment or 4
 	self.object = object
 	self.properties = properties
+	self.immediate = immediate
 	self.timeline = timeline
 end
 
 Key.play = function(self)
-	RemoveTimer(self.timer)
-	self.timer = Timer(function()
-		self:onTimer(self.object, self.properties)
-	end, const.Second)
+	self.object:detach()
+	if( self.immediate == false ) then
+		RemoveTimer(self.timer)
+		self.timer = Timer(function()
+			self:onTimer(self.object, self.properties)
+		end, const.Second)
+	else
+		self:set()
+	end
+end
+
+Key.set = function(self)
+	for key, value in pairs(self.properties) do
+		if(self.object[key]) then
+			self.object['set' .. key](self.object, value)
+		end
+	end
+	if(self.timeline) then
+		self.timeline:next()
+	end
 end
 
 function Key:new (o)

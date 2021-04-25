@@ -13,9 +13,15 @@ function Timeline:new (o)
 	return o
 end
 
-Timeline.to = function(self, object, properties, increment)
+Timeline.to = function(self, object, properties)
 	local newKey = Key:new()
-	newKey:to(object, properties, increment, self)
+	newKey:to(object, properties, false, self)
+	table.insert(self.keys, newKey)
+end
+
+Timeline.set = function(self, object, properties)
+	local newKey = Key:new()
+	newKey:to(object, properties, true, self)
 	table.insert(self.keys, newKey)
 end
 
@@ -27,6 +33,7 @@ end
 Timeline.stop = function(self)
 	for key,timelineKey in pairs(self.keys) do
 		RemoveTimer(timelineKey.timer)
+		timelineKey.object:reset()
 	end
 end
 
