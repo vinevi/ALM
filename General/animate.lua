@@ -1,0 +1,1 @@
+animate = require('animate.main')

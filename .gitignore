@@ -1,0 +1,12 @@
+/*
+
+/General/*
+!/General
+!/General/animate.lua
+
+/Modules/*
+!/Modules/
+!/Modules/animate
+
+!.gitignore
+!README.md
