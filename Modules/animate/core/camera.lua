@@ -6,6 +6,11 @@ local Camera = {
 	X = 0,
 	Y = 0,
 	Z = 0,
+	lastProperties = {
+		X = 0,
+		Y = 0,
+		Z = 0,
+	},
 }
 
 function Camera:new (o)

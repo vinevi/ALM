@@ -1,8 +1,23 @@
-local Key = require('animate.core.key')
+local Keyframe = require('animate.core.keyframe')
+local Time = require('animate.core.time')
+
+function merge(t1, t2)
+    for k, v in pairs(t2) do
+        if (type(v) == "table") and (type(t1[k] or false) == "table") then
+            merge(t1[k], t2[k])
+        else
+            t1[k] = v
+        end
+    end
+    return t1
+end
 
 local Timeline = {
-	keys = {},
-	currentKey = 1,
+	keyframes = {},
+	keyframesActive = {},
+	time = 0,
+	duration = 0,
+	timer = nil,
 }
 
 function Timeline:new (o)
@@ -13,38 +28,64 @@ function Timeline:new (o)
 	return o
 end
 
+Timeline.updateDuration = function(self)
+	self.duration = 0
+	for key,keyframe in pairs(self.keyframes) do
+		keyframe.start = self.duration
+		self.duration = self.duration + keyframe.duration
+		keyframe.finish = self.duration
+	end
+end
+
 Timeline.to = function(self, object, properties)
-	local newKey = Key:new()
-	newKey:to(object, properties, false, self)
-	table.insert(self.keys, newKey)
+	local newKeyframe = Keyframe:new()
+	duration = Time.secondsToTicks(properties.duration)
+	newKeyframe:to(object, properties, duration)
+	table.insert(self.keyframes, newKeyframe)
+	for key, value in pairs(properties) do
+		object.lastProperties[key] = value
+	end
+	self:updateDuration()
+	MessageBox(self.keyframes[1].propertiesFrom.X)
 end
 
 Timeline.set = function(self, object, properties)
-	local newKey = Key:new()
-	newKey:to(object, properties, true, self)
-	table.insert(self.keys, newKey)
+	local newKeyframe = Keyframe:new()
+	newKeyframe:to(object, properties, 0, self)
+	table.insert(self.keyframes, newKeyframe)
+end
+
+Timeline.updateActiveKeyframes = function(self)
+	self.keyframesActive = {}
+	for key,keyframe in pairs(self.keyframes) do
+		if( keyframe.start <= self.time and keyframe.finish >= self.time ) then
+			table.insert(self.keyframesActive, keyframe)
+		end
+	end
+end
+
+Timeline.onTick = function(self)
+	self.time = self.time + 1
+	self:updateActiveKeyframes()
+	for key,keyframe in pairs(self.keyframesActive) do
+		--Game.ShowStatusText(keyframe.propertiesFrom.X)
+		keyframe:seek(self.time)
+	end
+	if(self.time >= self.duration) then
+		self:stop()
+	end
 end
 
 Timeline.play = function(self)
-	self.keys[self.currentKey]:play()
-	Game.ShowStatusText('key: ' .. self.currentKey)
+	MessageBox(testvalue)
+	self.timer = Timer(function()
+		self:onTick()
+	end, const.Second)
 end
 
 Timeline.stop = function(self)
-	for key,timelineKey in pairs(self.keys) do
-		RemoveTimer(timelineKey.timer)
-		timelineKey.object:reset()
-	end
-end
-
-Timeline.next = function(self)
-	self.currentKey = self.currentKey + 1
-	if(self.currentKey <= #self.keys) then
-		self:play()
-	else
-		self.currentKey = 1
-		self:stop()
-	end
+	RemoveTimer(self.timer)
+	self.time = 0
 end
 
 return Timeline
