@@ -1,44 +1,61 @@
-Camera = require('animate.core.camera')
-Timeline = require('animate.core.timeline')
 
-local Animate = {}
+Animate = {
+	cinematics = {},
+	cinematic = nil,
+}
 
-Animate.generate_key = function(self)
-	debug.Message('timeline:to(Camera, {X = ' .. Party.X .. ', Y = ' .. Party.Y .. ', Z = ' .. Party.Z .. ', Yaw = ' .. Party.Direction .. '})' )
-end
+Animate.Cinematic = require('animate.core.cinematic')
+Animate.Keyframe = require('animate.core.camera')
+Animate.Camera = require('animate.core.camera')
+Animate.Input = require('animate.core.input')
 
 Animate.init = function(self)
-	timeline = {}
+	self:loadCinematics()
+	self:set('Goblinwatch 01')
+	self.Input:init()
+end
 
-	function Keys.L(t)
-		self:generate_key()
+Animate.loadCinematics = function(self)
+	local cinematics = {}
+	for s in path.find(AppPath .. "scripts/modules/animate/cinematics/*.lua") do
+		local filename = path.name(s)
+		filename = filename:sub(0, #filename - 4)
+		s = 'animate.cinematics.'  .. filename
+		local newCinematic = require(s)
+		newCinematic.filename = filename
+		newCinematic = self.Cinematic:new(newCinematic)
+		cinematics[newCinematic.title] = newCinematic
 	end
-	function Keys.O(t)
-		timeline:stop()
-	end
-	function Keys.P(t)
-		Camera:detach()
-		timeline = Timeline:new()
-		-- timeline:set(Camera, {X = -17762, Y = -14377, Z = 1600, Yaw = 1336})
-		timeline:to(Camera, {X = -17762, Y = -14377, Z = 1600, Yaw = 1336, duration = 0.1})
-		timeline:to(Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, duration = 5.2})
-		timeline:to(Camera, {X = -19102, Y = -14943, Z = 2136, Yaw = 1968, Pitch = 64, duration = 12.2})
-		timeline:to(Camera, {X = -19078, Y = -15007, Z = 1984, Yaw = 1520, Pitch = -64, duration = 1.2}, 13.2)
-		timeline:to(Camera, {X = -18986, Y = -15611, Z = 1985, Yaw = 2047, Pitch = 0, duration = 10.2})
-		timeline:to(Camera, {OutdoorFOV = 60, duration = 10.2})
-		timeline:to(Camera, {X = -19050, Y = -15406, Z = 1984, Yaw = 2036, duration = 12.2})
-		timeline:to(Camera, {OutdoorFOV = 170, duration = 10.2})
-		timeline:to(Camera, {X = -18507, Y = -15414, Z = 1984, Yaw = 1928, duration = 10.2})
-		timeline:play()
+	self.cinematics = cinematics
+end
+
+Animate.play = function(self, title)
+	if (self.cinematic and self.cinematic.timeline.isPlaying == false) then
+		self.cinematic:play()
+		Game.ShowStatusText('Play')
 	end
 end
 
-function Animate:new (o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
-	o:init()
-	return o
+Animate.stop = function(self)
+	if (self.cinematic and self.cinematic.timeline.isPlaying == true) then
+		self.cinematic:stop()
+		Game.ShowStatusText('Stop')
+	end
 end
 
-return Animate:new()
+Animate.pause = function(self)
+	if (self.cinematic and self.cinematic.timeline.isPlaying == true) then
+		self.cinematic:pause()
+		Game.ShowStatusText('Pause')
+	end
+end
+
+Animate.set = function(self, title)
+	local newCinematic = self.cinematics[title]
+	if (newCinematic) then
+		self:stop()
+		self.cinematic = newCinematic
+	end
+end
+
+return Animate
