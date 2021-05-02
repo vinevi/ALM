@@ -1,4 +1,4 @@
-Timeline = require('animate.core.timeline')
+local Timeline = require('animate.core.timeline')
 
 -- for now only 1 timeline is managed
 

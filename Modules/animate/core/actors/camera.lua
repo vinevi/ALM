@@ -1,3 +1,5 @@
+local Actor = require('animate.core.actor')
+
 local Camera = {
 	IndoorFOV = 65,
 	OutdoorFOV = 170,
@@ -6,17 +8,23 @@ local Camera = {
 	X = 0,
 	Y = 0,
 	Z = 0,
-	isAttached = true,
-	lastProperties = {
-		X = 0,
-		Y = 0,
-		Z = 0,
-		IndoorFOV = 65,
-		OutdoorFOV = 170,
-		Yaw = 0,
-		Pitch = 0,
-	},
 }
+
+Camera.resetProperties = function(self)
+
+	self.lastProperties = {}
+
+	self.X = mem.i4['0x004d5150']
+	self.Y = mem.i4['0x004d5154']
+	self.Z = mem.i4['0x004d5158']
+
+	self.IndoorFOV = 65
+	self.OutdoorFOV = 170
+	self.Yaw = mem.i4['0x004d5168']
+	self.Pitch = mem.i4['0x004d5164']
+
+
+end
 
 -- Indoor FOV
 
@@ -41,17 +49,6 @@ Camera.setOutdoorFOV = function(self, value)
 	mem.call(0x004582cd)
 end
 
--- Yaw
-
-Camera.getYaw = function(self)
-	return self.Yaw
-end
-
-Camera.setYaw = function(self, value)
-	self.Yaw = value
-	mem.i4['0x004d5168'] = value
-end
-
 -- Pitch
 
 Camera.getPitch = function(self)
@@ -61,6 +58,17 @@ end
 Camera.setPitch = function(self, value)
 	self.Pitch = value
 	mem.i4['0x004d5164'] = value
+end
+
+-- Yaw
+
+Camera.getYaw = function(self)
+	return self.Yaw
+end
+
+Camera.setYaw = function(self, value)
+	self.Yaw = value
+	mem.i4['0x004d5168'] = value
 end
 
 -- X
@@ -153,4 +161,12 @@ Camera.attach = function(self)
 	end
 end
 
-return Camera
+Camera.new = function (self, o)
+	o = o or Actor:new()
+	setmetatable(o, self)
+	self.__index = self
+	o:resetProperties()
+	return o
+end
+
+return Camera:new()

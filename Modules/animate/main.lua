@@ -5,8 +5,8 @@ Animate = {
 }
 
 Animate.Cinematic = require('animate.core.cinematic')
-Animate.Keyframe = require('animate.core.camera')
-Animate.Camera = require('animate.core.camera')
+Animate.Keyframe = require('animate.core.keyframe')
+Animate.Camera = require('animate.core.actors.camera')
 Animate.Input = require('animate.core.input')
 
 Animate.init = function(self)

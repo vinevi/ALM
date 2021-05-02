@@ -1,0 +1,3 @@
+local Model = {}
+
+return Model

@@ -7,9 +7,10 @@ local Time = require('animate.core.time')
 local Keyframe = {
 	object = {}, -- object with properties
 	duration = 1, -- in seconds (converted to ticks later)
+	progress = 0,
+	start = 0,
 	time = 0,
-	start = nil,
-	finish = nil,
+	finish = 0,
 }
 
 Keyframe.to = function(self, object, properties)
@@ -18,19 +19,20 @@ Keyframe.to = function(self, object, properties)
 	self.propertiesFrom = {}
 	for key, value in pairs(properties) do
 		self.propertiesTo[key] = value
-		self.propertiesFrom[key] = self.object.lastProperties[key]
+		self.propertiesFrom[key] = self.object.lastProperties[key] or self.object[key]
 	end
 	
 	self.duration = Time.secondsToTicks(properties.duration)
+	self.finish = self.duration
 end
 
 Keyframe.seek = function(self, tick)
 	self.object:detach()
-	self.time = ((tick - self.start) / self.duration) -- progress normalized
+	self.progress = ((tick - self.start) / self.duration) -- progress normalized
 	for key, targetValue in pairs(self.propertiesTo) do
 		if(self.object[key]) then
-			local initialValue = self.propertiesFrom[key] or 0
-			local newValue = (1 - self.time) * initialValue + self.time * targetValue
+			local initialValue = self.propertiesFrom[key]
+			local newValue = (1 - self.progress) * initialValue + self.progress * targetValue
 			self.object['set' .. key](self.object, math.floor(newValue))
 		end
 	end
@@ -63,8 +65,7 @@ Keyframe.stop = function(self)
 	self.object:attach()
 end
 
--- Standalone function end --
-
+-- Standalone functions end --
 
 Keyframe.new = function (self, o)
 	o = o or {}

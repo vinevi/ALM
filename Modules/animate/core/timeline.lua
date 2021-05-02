@@ -34,6 +34,13 @@ Timeline.set = function(self, object, properties)
 	self:to(object, properties)
 end
 
+Timeline.seek = function(self, time)
+	self.keyframesActive = {}
+	self.time = Time.secondsToTicks(time)
+end
+
+-- Standalone functions --
+
 Timeline.updateActiveKeyframes = function(self)
 	self.keyframesActive = {}
 	for key,keyframe in pairs(self.keyframes) do
@@ -70,11 +77,6 @@ Timeline.pause = function(self)
 	RemoveTimer(self.onTimer)
 end
 
-Timeline.seek = function(self, time)
-	self.keyframesActive = {}
-	self.time = Time.secondsToTicks(time)
-end
-
 Timeline.stop = function(self)
 	self.isPlaying = false
 	for key,keyframe in pairs(self.keyframes) do
@@ -84,6 +86,8 @@ Timeline.stop = function(self)
 	self.keyframesActive = {}
 	self.time = 0
 end
+
+-- Standalone functions end --
 
 Timeline.new = function(self,o)
 	o = o or {}
