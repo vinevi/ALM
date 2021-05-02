@@ -6,6 +6,7 @@ Animate = {
 
 Animate.Cinematic = require('animate.core.cinematic')
 Animate.Keyframe = require('animate.core.keyframe')
+Animate.Timeline = require('animate.core.timeline')
 Animate.Camera = require('animate.core.actors.camera')
 Animate.Input = require('animate.core.input')
 

@@ -3,7 +3,7 @@ local Input = {}
 
 Input.init = function()
 
-	function Keys.G(t)
+	function Keys.F(t)
 		Editor:generateKeyframe()
 	end
 
@@ -18,9 +18,18 @@ Input.init = function()
 			Animate:pause()
 		end
 	end
-	
+
 	function Keys.K(t)
 		Animate:seek()
+	end
+
+	function Keys.G(t)
+		-- Timeline standalone example
+
+		Animate.Camera:resetProperties()
+		testTimeline = Animate.Timeline:new()
+		testTimeline:to(Animate.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, duration = 15.2})
+		testTimeline:play()
 	end
 
 	function Keys.H(t)

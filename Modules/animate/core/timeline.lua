@@ -2,8 +2,6 @@ local Keyframe = require('animate.core.keyframe')
 local Time = require('animate.core.time')
 
 local Timeline = {
-	keyframes = {},
-	keyframesActive = {},
 	time = 0,
 	duration = 0,
 	timer = nil,
@@ -93,7 +91,8 @@ Timeline.new = function(self,o)
 	o = o or {}
 	setmetatable(o, self)
 	self.__index = self
-	o.keys = {}
+	o.keyframes = {}
+	o.keyframesActive = {}
 	return o
 end
 
