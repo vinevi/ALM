@@ -8,8 +8,8 @@ local Keyframe = {
 	object = {}, -- object with properties
 	duration = 1, -- in seconds (converted to ticks later)
 	progress = 0,
-	start = 0,
 	time = 0,
+	start = 0,
 	finish = 0,
 }
 
@@ -23,7 +23,6 @@ Keyframe.to = function(self, object, properties)
 	end
 	
 	self.duration = Time.secondsToTicks(properties.duration)
-	self.finish = self.duration
 end
 
 Keyframe.seek = function(self, tick)
@@ -37,8 +36,6 @@ Keyframe.seek = function(self, tick)
 		end
 	end
 end
-
--- Standalone functions --
 
 Keyframe.onTick = function(self)
 	self.time = self.time + 1
@@ -64,8 +61,6 @@ Keyframe.stop = function(self)
 	self.time = 0
 	self.object:attach()
 end
-
--- Standalone functions end --
 
 Keyframe.new = function (self, o)
 	o = o or {}

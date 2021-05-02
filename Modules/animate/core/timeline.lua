@@ -6,6 +6,8 @@ local Timeline = {
 	duration = 0,
 	timer = nil,
 	isPlaying = false,
+	speed = 1,
+	direction = 'forward',
 }
 
 Timeline.updateDuration = function(self)
@@ -32,12 +34,23 @@ Timeline.set = function(self, object, properties)
 	self:to(object, properties)
 end
 
-Timeline.seek = function(self, time)
-	self.keyframesActive = {}
-	self.time = Time.secondsToTicks(time)
+Timeline.setTime = function(self, time)
+	if (time < 0) then
+		time = 0
+	end
+	if (time > self.duration) then
+		time = self.duration
+	end
+	self.time = time
 end
 
--- Standalone functions --
+Timeline.seek = function(self, time)
+	self:setTime(Time.secondsToTicks(time))
+	self:updateActiveKeyframes()
+	for key,keyframe in pairs(self.keyframesActive) do
+		keyframe:seek(self.time)
+	end
+end
 
 Timeline.updateActiveKeyframes = function(self)
 	self.keyframesActive = {}
@@ -48,8 +61,17 @@ Timeline.updateActiveKeyframes = function(self)
 	end
 end
 
+Timeline.setDirection = function(self, direction)
+	if (direction == 'reverse') then
+		self.speed = -1
+	else
+		self.speed = 1
+	end
+	self.direction = direction
+end
+
 Timeline.onTick = function(self)
-	self.time = self.time + 1
+	self:setTime(self.time + self.speed)
 	self:updateActiveKeyframes()
 	for key,keyframe in pairs(self.keyframesActive) do
 		keyframe:seek(self.time)
@@ -76,16 +98,15 @@ Timeline.pause = function(self)
 end
 
 Timeline.stop = function(self)
-	self.isPlaying = false
-	for key,keyframe in pairs(self.keyframes) do
-		keyframe.object:attach()
+	if (self.isPlaying == true) then
+		self:pause()
+		for key,keyframe in pairs(self.keyframes) do
+			keyframe.object:attach()
+		end
+		self.keyframesActive = {}
+		self:setTime(0)
 	end
-	RemoveTimer(self.onTimer)
-	self.keyframesActive = {}
-	self.time = 0
 end
-
--- Standalone functions end --
 
 Timeline.new = function(self,o)
 	o = o or {}
