@@ -20,9 +20,27 @@ Keyframe.to = function(self, object, properties)
 	for key, value in pairs(properties) do
 		self.propertiesTo[key] = value
 		self.propertiesFrom[key] = self.object.lastProperties[key] or self.object[key]
+		if(self.object[key .. 'Wrap']) then
+			self:adjustWrap(key, value)
+		end
 	end
 	
 	self.duration = Time.secondsToTicks(properties.duration)
+end
+
+Keyframe.adjustWrap = function(self, key, value)
+	local wrapValue = self.object[key .. 'Wrap']
+	local valueFrom = self.propertiesFrom[key]
+	local difference = math.abs(valueFrom - value)
+	local alt = math.abs(wrapValue - difference)
+	if (difference > alt) then
+		if (value > valueFrom) then
+			alt = valueFrom - alt
+		else
+			alt = valueFrom + alt
+		end
+		self.propertiesTo[key] = alt
+	end
 end
 
 Keyframe.seek = function(self, tick)
@@ -32,6 +50,9 @@ Keyframe.seek = function(self, tick)
 		if(self.object[key]) then
 			local initialValue = self.propertiesFrom[key]
 			local newValue = (1 - self.progress) * initialValue + self.progress * targetValue
+			if(self.object[key .. 'Wrap']) then
+				newValue = newValue % self.object[key .. 'Wrap']
+			end
 			self.object['set' .. key](self.object, math.floor(newValue))
 		end
 	end

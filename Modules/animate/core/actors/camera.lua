@@ -4,6 +4,7 @@ local Camera = {
 	IndoorFOV = 65,
 	OutdoorFOV = 170,
 	Yaw = 0,
+	YawWrap = 2047,
 	Pitch = 0,
 	X = 0,
 	Y = 0,
