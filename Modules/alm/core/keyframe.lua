@@ -6,7 +6,7 @@ local Time = require('alm.core.time')
 
 local Keyframe = {
 	object = {}, -- object with properties
-	duration = 1, -- in seconds (converted to ticks later)
+	Duration = 1, -- in seconds (converted to ticks later)
 	progress = 0,
 	time = 0,
 	start = 0,
@@ -25,7 +25,7 @@ Keyframe.to = function(self, object, properties)
 		end
 	end
 	
-	self.duration = Time.secondsToTicks(properties.duration)
+	self.Duration = Time.secondsToTicks(properties.Duration)
 end
 
 Keyframe.adjustWrap = function(self, key, value)
@@ -45,7 +45,7 @@ end
 
 Keyframe.seek = function(self, tick)
 	self.object:detach()
-	self.progress = ((tick - self.start) / self.duration) -- progress normalized
+	self.progress = ((tick - self.start) / self.Duration) -- progress normalized
 	for key, targetValue in pairs(self.propertiesTo) do
 		if(self.object[key]) then
 			local initialValue = self.propertiesFrom[key]
@@ -61,7 +61,7 @@ end
 Keyframe.onTick = function(self)
 	self.time = self.time + 1
 	self:seek(self.time)
-	if(self.time >= self.duration) then
+	if(self.time >= self.Duration) then
 		self:stop()
 	end
 end

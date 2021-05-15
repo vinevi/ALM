@@ -112,24 +112,41 @@ end
 Camera.detach = function(self)
 	if (self.isAttached == true) then
 		mem.u4[0x00908c84] = 0 --forward offset
-		-- x
-		mem.nop(0x00435207)
-		mem.asmpatch(0x0046a04e, 'MOV ECX,dword ptr [0x004d5150]')
-		mem.asmpatch(0x0046a0e4, 'MOV EDX,dword ptr [0x004d5150]')
-		-- y
-		mem.nop(0x00435219)
-		mem.asmpatch(0x0046a0aa, 'MOV EDX,dword ptr [0x004d5154]')
-		mem.asmpatch(0x0046a0fa, 'MOV EAX,[0x004d5154]')
-		-- z
-		mem.nop(0x0043523a)
-		mem.asmpatch(0x0046a0b0, 'MOV ECX,dword ptr [0x004d5158]')
+
+		-- common
+		mem.nop(0x00435207) -- x
+		mem.nop(0x00435219) -- y
+		mem.nop(0x0043523a) -- z
+
 		mem.u4[0x00908c7c] = 0 -- eye level
-		-- angles
+
 		mem.nop(0x00435240) -- horizontal angle
 		mem.nop(0x00435246) -- vertical angle
 
+		-- outdoor
+		-- x
+		mem.asmpatch(0x0046a04e, 'MOV ECX,dword ptr [0x004d5150]')
+		mem.asmpatch(0x0046a0e4, 'MOV EDX,dword ptr [0x004d5150]')
+		-- y
+		mem.asmpatch(0x0046a0aa, 'MOV EDX,dword ptr [0x004d5154]')
+		mem.asmpatch(0x0046a0fa, 'MOV EAX,[0x004d5154]')
+		-- z
+		mem.asmpatch(0x0046a0b0, 'MOV ECX,dword ptr [0x004d5158]')
+
 		mem.nop(0x00469fff) -- horizontal angle
 		mem.nop(0x0046a009) -- vertical angle
+
+		-- indoor
+		mem.asmpatch(0x004370b9, 'MOV ECX,dword ptr [0x004d5150]') -- x
+		mem.asmpatch(0x00437114, 'MOV EDX,dword ptr [0x004d5154]') -- y
+		mem.asmpatch(0x00437122, 'MOV EAX,[0x004d5158]') -- z
+
+		mem.asmpatch(0x00437133, 'MOV EAX,[0x004d5164]') -- vertical angle
+
+		-- horizontal angle
+		mem.asmpatch(0x0043712b, 'MOV EDX,dword ptr [0x004d5168]')
+		mem.asmpatch(0x004370c7, 'MOV EAX,[0x004d5168]')
+		mem.asmpatch(0x00437067, 'MOV ESI,dword ptr [0x004d5168]')
 
 		self.isAttached = false
 	end
@@ -139,24 +156,44 @@ Camera.attach = function(self)
 	if (self.isAttached == false) then
 		mem.u4[0x00908c84] = 25 --forward offset
 
+		-- common
+		
+		mem.asmpatch(0x00435207, 'MOV dword ptr [0x00908cac],EDX') -- x
+		mem.asmpatch(0x00435219, 'MOV dword ptr [0x00908cb0],EDX') -- y
+		mem.asmpatch(0x0043523a, 'MOV dword ptr [0x00908cb4],EBP') -- z
+
+		mem.asmpatch(0x00435240, 'MOV dword ptr [0x00908cb8],EDI') -- horizontal angle
+		mem.asmpatch(0x00435246, 'MOV dword ptr [0x00908cbc],ESI') -- vertical angle
+
+		-- outdoor
+
 		-- x
-		mem.asmpatch(0x00435207, 'MOV dword ptr [0x00908cac],EDX')
 		mem.asmpatch(0x0046a04e, 'MOV ECX,dword ptr [0x00908c98]')
 		mem.asmpatch(0x0046a0e4, 'MOV EDX,dword ptr [0x00908c98]')
 		-- y
-		mem.asmpatch(0x00435219, 'MOV dword ptr [0x00908cb0],EDX')
 		mem.asmpatch(0x0046a0aa, 'MOV EDX,dword ptr [0x00908c9c]')
 		mem.asmpatch(0x0046a0fa, 'MOV EAX,[0x00908c9c]')
 		-- z
-		mem.asmpatch(0x0043523a, 'MOV dword ptr [0x00908cb4],EBP')
 		mem.asmpatch(0x0046a0b0, 'MOV ECX,dword ptr [0x00908ca0]')
 		mem.u4[0x00908c7c] = 160 -- eye level
+
 		-- angles
-		mem.asmpatch(0x00435240, 'MOV dword ptr [0x00908cb8],EDI')
-		mem.asmpatch(0x00435246, 'MOV dword ptr [0x00908cbc],ESI')
 
 		mem.asmpatch(0x00469fff, 'MOV [0x004d5164],EAX')
 		mem.asmpatch(0x0046a009, 'MOV dword ptr [0x004d5168],ECX')
+
+		-- indoor
+
+		mem.asmpatch(0x004370b9, 'MOV ECX,dword ptr [0x00908c98]') -- x
+		mem.asmpatch(0x00437114, 'MOV EDX,dword ptr [0x00908c9c]') -- y
+		mem.asmpatch(0x00437122, 'MOV EAX,[0x00908ca0]') -- z
+
+		mem.asmpatch(0x00437133, 'MOV EAX,[0x00908ca8]') -- vertical angle
+
+		-- horizontal angle
+		mem.asmpatch(0x0043712b, 'MOV EDX,dword ptr [0x00908ca4]')
+		mem.asmpatch(0x004370c7, 'MOV EAX,[0x00908ca4]')
+		mem.asmpatch(0x00437067, 'MOV ESI,dword ptr [0x00908ca4]')
 
 		self.isAttached = true
 	end

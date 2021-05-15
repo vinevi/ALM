@@ -3,7 +3,7 @@ local Time = require('alm.core.time')
 
 local Timeline = {
 	time = 0,
-	duration = 0,
+	Duration = 0,
 	timer = nil,
 	isPlaying = false,
 	speed = 1,
@@ -11,11 +11,11 @@ local Timeline = {
 }
 
 Timeline.updateDuration = function(self)
-	self.duration = 0
+	self.Duration = 0
 	for key,keyframe in pairs(self.keyframes) do
-		keyframe.start = self.duration
-		self.duration = self.duration + keyframe.duration
-		keyframe.finish = self.duration
+		keyframe.start = self.Duration
+		self.Duration = self.Duration + keyframe.Duration
+		keyframe.finish = self.Duration
 	end
 end
 
@@ -30,7 +30,7 @@ Timeline.to = function(self, object, properties)
 end
 
 Timeline.set = function(self, object, properties)
-	properties.duration = 0
+	properties.Duration = 0
 	self:to(object, properties)
 end
 
@@ -38,8 +38,8 @@ Timeline.setTime = function(self, time)
 	if (time < 0) then
 		time = 0
 	end
-	if (time > self.duration) then
-		time = self.duration
+	if (time > self.Duration) then
+		time = self.Duration
 	end
 	self.time = time
 end
@@ -76,7 +76,7 @@ Timeline.onTick = function(self)
 	for key,keyframe in pairs(self.keyframesActive) do
 		keyframe:seek(self.time)
 	end
-	if(self.time >= self.duration) then
+	if(self.time >= self.Duration) then
 		self:stop()
 	end
 end

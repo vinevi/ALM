@@ -1,64 +1,35 @@
 local Editor = require('alm.core.editor')
-local Time = require('alm.core.time')
 
 local Input = {}
 
-local timeline = require('alm.timelines.goblinwatch')
 Input.init = function()
-
-	function Keys.F(t)
-		if (Game.CurrentScreen == 0) then
+	local inputEvents = {
+		[const.Keys.F] = function()
 			Editor:generateKeyframe()
-		end
-	end
-
-	function Keys.O(t)
-		if (Game.CurrentScreen == 0) then
-			timeline:stop()
-		end
-	end
-	
-	function Keys.P(t)
-		if (Game.CurrentScreen == 0) then
-			if (timeline.isPlaying == false) then
-				timeline:play()
-			else
-				timeline:pause()
-			end
-		end
-	end
-
-	function Keys.K(t)
-		if (Game.CurrentScreen == 0) then
-			local time = Time.ticksToSeconds(timeline.time) - 1
-			timeline:seek(time)
-		end
-	end
-
-	function Keys.L(t)
-		if (Game.CurrentScreen == 0) then
-			local time = Time.ticksToSeconds(timeline.time) + 1
-			timeline:seek(time)
-		end
-	end
-
-	function Keys.J(t)
-		if (Game.CurrentScreen == 0) then
-			if (timeline.direction == 'forward') then
-				timeline:setDirection('reverse')
-			else
-				timeline:setDirection('forward')
-			end
-		end
-	end
-
-	function Keys.H(t)
-		if (Game.CurrentScreen == 0) then
+		end,
+		[const.Keys.H] = function()
 			-- Keyframe standalone example
 			alm.Camera:resetProperties()
-			local testAnimation = alm.Keyframe:new()
-			testAnimation:to(alm.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, duration = 15.2})
-			testAnimation:play()
+			local keyframe = alm.Keyframe:new()
+			keyframe:to(alm.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, Duration = 15.2})
+			keyframe:play()
+		end,
+		[const.Keys.G] = function()
+			-- Timeline standalone example
+			local timeline = alm.Timeline:new()
+			timeline:set(alm.Camera, {X = -9814, Y = -6515, Z = 161, Yaw = 1592, Pitch = 0})
+			timeline:to(alm.Camera, {X = -9814, Y = -6515, Z = 161, Yaw = 1592, Pitch = 0, Duration = 1})
+			timeline:to(alm.Camera, {X = -9625, Y = -6633, Z = 577, Yaw = 1808, Pitch = 0, Duration = 5})
+			timeline:to(alm.Camera, {X = -14020, Y = -10172, Z = 883, Yaw = 1048, Pitch = -50, Duration = 8})
+			timeline:play()
+		end,
+	}
+
+	function events.KeyDown(t)
+		local isInGame = Game.CurrentScreen == 0 and Game.MainMenuCode == -1
+		local keyFunction = inputEvents[t.Key]
+		if(keyFunction and isInGame == true) then
+			keyFunction()
 		end
 	end
 end
