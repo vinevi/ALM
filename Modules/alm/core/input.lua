@@ -3,7 +3,7 @@ local Time = require('alm.core.time')
 
 local Input = {}
 
-local timeline = require('animate.timelines.goblinwatch')
+local timeline = require('alm.timelines.goblinwatch')
 Input.init = function()
 
 	function Keys.F(t)
@@ -55,9 +55,9 @@ Input.init = function()
 	function Keys.H(t)
 		if (Game.CurrentScreen == 0) then
 			-- Keyframe standalone example
-			Animate.Camera:resetProperties()
-			local testAnimation = Animate.Keyframe:new()
-			testAnimation:to(Animate.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, duration = 15.2})
+			alm.Camera:resetProperties()
+			local testAnimation = alm.Keyframe:new()
+			testAnimation:to(alm.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, duration = 15.2})
 			testAnimation:play()
 		end
 	end

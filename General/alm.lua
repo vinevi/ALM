@@ -1,2 +1,2 @@
-animate = require('animate.main')
-animate:init()
+alm = require('alm.main')
+alm:init()
