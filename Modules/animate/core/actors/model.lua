@@ -1,3 +1,0 @@
-local Model = {}
-
-return Model
