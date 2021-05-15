@@ -13,12 +13,16 @@ Actor.refreshLastProperties = function(self)
 	self.lastProperties = {}
 end
 
-Actor.attach = function(sef)
+Actor.attach = function(self)
 	self.isAttached = true
 end
 
 Actor.detach = function(self)
 	self.isAttached = false
+end
+
+Actor.reset = function(self)
+	self.isAttached = true
 end
 
 return Actor

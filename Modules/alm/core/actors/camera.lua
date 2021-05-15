@@ -1,15 +1,15 @@
 local Actor = require('alm.core.actor')
 
-local Camera = {
-	IndoorFOV = 65,
-	OutdoorFOV = 170,
-	Yaw = 0,
-	YawWrap = 2047,
-	Pitch = 0,
-	X = 0,
-	Y = 0,
-	Z = 0,
-}
+local Camera = Actor:new() 
+
+Camera.IndoorFOV = 65
+Camera.OutdoorFOV = 170
+Camera.Yaw = 0
+Camera.YawWrap = 2047
+Camera.Pitch = 0
+Camera.X = 0
+Camera.Y = 0
+Camera.Z = 0
 
 Camera.resetProperties = function(self)
 
@@ -23,7 +23,6 @@ Camera.resetProperties = function(self)
 	self.OutdoorFOV = 170
 	self.Yaw = mem.i4['0x004d5168']
 	self.Pitch = mem.i4['0x004d5164']
-
 
 end
 
@@ -199,12 +198,4 @@ Camera.attach = function(self)
 	end
 end
 
-Camera.new = function (self, o)
-	o = o or Actor:new()
-	setmetatable(o, self)
-	self.__index = self
-	o:resetProperties()
-	return o
-end
-
-return Camera:new()
+return Camera

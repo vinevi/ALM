@@ -53,7 +53,7 @@ Player.toggleDirection = function(self)
 end
 
 Player.togglePause = function(self)
-	if (self.isPlaying == false) then
+	if (self.cinematic.t.isPlaying == false) then
 		self:resume()
 	else
 		self:pause()

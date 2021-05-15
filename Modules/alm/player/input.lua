@@ -6,7 +6,7 @@ PlayerInput.init = function(self)
 			alm.Player:stop()
 		end,
 		[const.Keys.P] = function()
-			alm.Player:play('Goblinwatch 1')
+			alm.Player:play('New Sorpigal 2')
 		end,
 		[const.Keys.K] = function()
 			alm.Player:rewind()

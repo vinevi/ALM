@@ -5,6 +5,7 @@ alm.Timeline = require('alm.core.timeline')
 alm.Camera = require('alm.core.actors.camera')
 alm.Input = require('alm.core.input')
 alm.Player = require('alm.player.main')
+alm.Model = require('alm.core.actors.model')
 
 alm.init = function(self)
 	self.Player:init()
