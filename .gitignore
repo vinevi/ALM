@@ -2,11 +2,11 @@
 
 /General/*
 !/General
-!/General/animate.lua
+!/General/alm.lua
 
 /Modules/*
 !/Modules/
-!/Modules/animate
+!/Modules/alm
 
 !.gitignore
 !README.md
