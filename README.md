@@ -1,1 +1,1 @@
-# mm6-animate
+# ALM - Animation Library for Might & Magic
