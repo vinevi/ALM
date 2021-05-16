@@ -6,7 +6,7 @@ PlayerInput.init = function(self)
 			alm.Player:stop()
 		end,
 		[const.Keys.P] = function()
-			alm.Player:play('New Sorpigal 2')
+			alm.Player:play('Temple of Baa')
 		end,
 		[const.Keys.K] = function()
 			alm.Player:rewind()
@@ -16,6 +16,10 @@ PlayerInput.init = function(self)
 		end,
 		[const.Keys.J] = function()
 			alm.Player:toggleDirection()
+		end,
+		[const.Keys.D] = function()
+			alm.Player:loadCinematics()
+			Game.ShowStatusText('cinematics reloaded')
 		end,
 	}
 

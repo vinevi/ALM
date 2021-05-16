@@ -18,8 +18,8 @@ Model.setX = function(self, value)
 	local model = Game.Map.Models[self.modelIndex]
 	local difference = self.X - value
 	self.X = value
-	MoveModel(self.model, difference, self.Y, self.Z)
-	--Game.ShowStatusText(model.X)
+	MoveModel(self.model, difference, 0, 0)
+	Game.ShowStatusText(self.X .. ' ' .. self.Y .. ' ' .. self.Z)
 end
 
 -- Y
@@ -32,24 +32,7 @@ Model.setY = function(self, value)
 	local model = Game.Map.Models[self.modelIndex]
 	local difference = self.Y - value
 	self.Y = value
-	MoveModel(self.model, self.X, difference, self.Z)
-end
-
-Model.getYaw = function(self)
-	return self.Yaw
-end
-
-Model.setYaw = function(self, yaw)
-	local sinYaw = math.sin(yaw)
-	local cosYaw = math.cos(yaw)
-	local nodes = self.model.Vertexes
-	for key, value in pairs(nodes) do
-	   local y = value
-	   local z = value
-	   value.Y = y * cosYaw - z * sinYaw
-	   value.X = z * cosYaw + y * sinYaw
-	end
-	self.Yaw = yaw
+	MoveModel(self.model, 0, difference, 0)
 end
 
 -- Z
@@ -61,7 +44,7 @@ end
 Model.setZ = function(self, value)
 	local difference = self.Z - value
 	self.Z = value
-	MoveModel(self.model, self.X, self.Y, difference)
+	MoveModel(self.model, 0, 0, difference)
 end
 
 Model.detach = function(self)

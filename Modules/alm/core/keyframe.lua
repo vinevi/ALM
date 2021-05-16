@@ -3,10 +3,12 @@
 -- Require from and to values
 
 local Time = require('alm.core.time')
+local Interpolation = require('alm.core.interpolation')
 
 local Keyframe = {
 	object = {}, -- object with properties
 	Duration = 1, -- in seconds (converted to ticks later)
+	Delay = 0,
 	progress = 0,
 	time = 0,
 	start = 0,
@@ -24,7 +26,7 @@ Keyframe.to = function(self, object, properties)
 			self:adjustWrap(key, value)
 		end
 	end
-	
+	self.Delay = Time.secondsToTicks(properties.Delay or 0)
 	self.Duration = Time.secondsToTicks(properties.Duration)
 end
 
@@ -49,7 +51,7 @@ Keyframe.seek = function(self, tick)
 	for key, targetValue in pairs(self.propertiesTo) do
 		if(self.object[key]) then
 			local initialValue = self.propertiesFrom[key]
-			local newValue = (1 - self.progress) * initialValue + self.progress * targetValue
+			local newValue = Interpolation.cosine(initialValue, targetValue, self.progress)
 			if(self.object[key .. 'Wrap']) then
 				newValue = newValue % self.object[key .. 'Wrap']
 			end

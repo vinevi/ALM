@@ -71,6 +71,7 @@ Player.set = function(self, title)
 end
 
 Player.loadCinematics = function(self)
+	self.cinematics = {}
 	for s in path.find(AppPath .. "scripts/modules/alm/player/cinematics/*.lua") do
 		local filename = path.name(s)
 		filename = filename:sub(0, #filename - 4)

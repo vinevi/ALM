@@ -13,8 +13,8 @@ local Timeline = {
 Timeline.updateDuration = function(self)
 	self.Duration = 0
 	for key,keyframe in pairs(self.keyframes) do
-		keyframe.start = self.Duration
-		self.Duration = self.Duration + keyframe.Duration
+		keyframe.start = self.Duration + keyframe.Delay
+		self.Duration = self.Duration + keyframe.Duration + keyframe.Delay
 		keyframe.finish = self.Duration
 	end
 end
