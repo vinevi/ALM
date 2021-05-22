@@ -3,7 +3,7 @@
 return {
 	title = 'Test Indoor',
 	onBegin = function(self)
-		evt.
+		
 	end,
 	create = function(self)
 		local camera = alm.Camera:new()

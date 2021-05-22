@@ -8,6 +8,8 @@ local Timeline = {
 	isPlaying = false,
 	speed = 1,
 	direction = 'forward',
+	onBegin = function(self) end,
+	onEnd = function(self) end,
 }
 
 Timeline.updateDuration = function(self)
@@ -83,6 +85,7 @@ end
 
 Timeline.play = function(self)
 	self.isPlaying = true
+	self:onBegin()
 	for key,keyframe in pairs(self.keyframes) do
 		keyframe.object:detach()
 	end
@@ -99,6 +102,7 @@ end
 
 Timeline.stop = function(self)
 	if (self.isPlaying == true) then
+		self:onEnd()
 		self:pause()
 		for key,keyframe in pairs(self.keyframes) do
 			keyframe.object:attach()

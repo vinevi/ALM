@@ -9,10 +9,8 @@ Input.init = function()
 		end,
 		[const.Keys.H] = function()
 			-- Keyframe standalone example
-			alm.Camera:resetProperties()
-			local keyframe = alm.Keyframe:new()
-			keyframe:to(alm.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, Duration = 15.2})
-			keyframe:play()
+			alm.Camera:sync()
+			alm.to(alm.Camera, {X = -18868, Y = -14448, Z = 1600, Yaw = 1740, Duration = 15.2})
 		end,
 		[const.Keys.G] = function()
 			-- Timeline standalone example
@@ -22,6 +20,9 @@ Input.init = function()
 			timeline:to(alm.Camera, {X = -9625, Y = -6633, Z = 577, Yaw = 1808, Pitch = 0, Duration = 5})
 			timeline:to(alm.Camera, {X = -14020, Y = -10172, Z = 883, Yaw = 1048, Pitch = -50, Duration = 8})
 			timeline:play()
+		end,
+		[const.Keys.N] = function()
+			
 		end,
 	}
 

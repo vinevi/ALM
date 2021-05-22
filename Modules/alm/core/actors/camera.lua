@@ -11,7 +11,7 @@ Camera.X = 0
 Camera.Y = 0
 Camera.Z = 0
 
-Camera.resetProperties = function(self)
+Camera.sync = function(self)
 
 	self.lastProperties = {}
 

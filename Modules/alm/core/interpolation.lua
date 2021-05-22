@@ -5,8 +5,9 @@ Interpolation.linear = function(y1, y2, progress)
 end
 
 Interpolation.cosine = function(y1, y2, progress)
-	xv = (1 - math.cos(progress * 3.1415927)) / 2
-	return y1 + (y2 - y1) * xv
+	local progress2
+	progress2 = (1 - math.cos(progress * math.pi)) / 2;
+	return(y1 * (1 - progress2) + y2 * progress2);
 end
 
 return Interpolation

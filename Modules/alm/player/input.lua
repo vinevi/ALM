@@ -13,7 +13,7 @@ PlayerInput.init = function(self)
 			alm.Player:stop()
 		end,
 		[const.Keys.P] = function()
-			alm.Player:play('Test Indoor')
+			alm.Player:play('Temple of Baa')
 		end,
 		[const.Keys.K] = function()
 			alm.Player:rewind()

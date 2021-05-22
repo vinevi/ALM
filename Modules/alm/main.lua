@@ -9,6 +9,12 @@ alm.Player = require('alm.player.main')
 alm.Camera = require('alm.core.actors.camera')
 alm.Model = require('alm.core.actors.model')
 
+alm.to = function(object, properties)
+	local timeline = alm.Timeline:new()
+	timeline:to(object, properties)
+	timeline:play()
+end
+
 alm.init = function(self)
 	self.Player:init()
 	self.Input:init()

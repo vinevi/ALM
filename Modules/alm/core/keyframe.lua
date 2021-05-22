@@ -30,6 +30,9 @@ Keyframe.to = function(self, object, properties)
 	end
 	self.Delay = Time.secondsToTicks(properties.Delay or 0)
 	self.Duration = Time.secondsToTicks(properties.Duration)
+	if (self.Duration == 0) then
+		self.Duration = 1
+	end
 	self.onBegin = properties.onBegin or function() end
 	self.onEnd = properties.onEnd or function() end
 end
