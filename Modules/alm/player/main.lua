@@ -19,7 +19,9 @@ Player.rewind = function(self)
 end
 
 Player.resume = function(self)
-	self.cinematic:play()
+	if( self.cinematic) then
+		self.cinematic:play()
+	end
 	self.isPlaying = true
 end
 
@@ -35,12 +37,16 @@ Player.play = function(self, title)
 end
 
 Player.stop = function(self)
-	self.cinematic:stop()
+	if (self.cinematic) then
+		self.cinematic:stop()
+	end
 	self.isPlaying = false
 end
 
 Player.pause = function(self)
-	self.cinematic:pause()
+	if (self.cinematic) then
+		self.cinematic:pause()
+	end
 	self.isPlaying = false
 end
 
@@ -76,6 +82,7 @@ Player.loadCinematics = function(self)
 		local filename = path.name(s)
 		filename = filename:sub(0, #filename - 4)
 		s = 'alm.player.cinematics.'  .. filename
+		package.loaded[s] = nil
 		local newCinematic = require(s)
 		newCinematic.filename = filename
 		newCinematic = BaseCinematic:new(newCinematic)

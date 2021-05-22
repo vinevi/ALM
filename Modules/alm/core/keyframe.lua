@@ -13,8 +13,8 @@ local Keyframe = {
 	time = 0,
 	start = 0,
 	finish = 0,
-	onStart = function() end,
-	onFinish = function() end,
+	onBegin = function() end,
+	onEnd = function() end,
 }
 
 Keyframe.to = function(self, object, properties)
@@ -30,8 +30,8 @@ Keyframe.to = function(self, object, properties)
 	end
 	self.Delay = Time.secondsToTicks(properties.Delay or 0)
 	self.Duration = Time.secondsToTicks(properties.Duration)
-	self.onStart = properties.onStart or function() end
-	self.onFinish = properties.onFinish or function() end
+	self.onBegin = properties.onBegin or function() end
+	self.onEnd = properties.onEnd or function() end
 end
 
 Keyframe.adjustWrap = function(self, key, value)
@@ -53,9 +53,9 @@ Keyframe.seek = function(self, tick)
 	self.object:detach()
 	self.progress = ((tick - self.start) / self.Duration) -- progress normalized
 	if (self.progress == 0) then
-		self:onStart()
+		self:onBegin()
 	elseif (self.progress == 1) then
-		self:onFinish()
+		self:onEnd()
 	end
 	for key, targetValue in pairs(self.propertiesTo) do
 		if(self.object[key]) then

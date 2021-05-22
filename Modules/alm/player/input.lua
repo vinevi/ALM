@@ -1,12 +1,19 @@
 local PlayerInput = {}
 
+PlayerInput.reload = function(self)
+	package.loaded['alm.player.main'] = nil
+	alm.Player = require('alm.player.main')
+	alm.Player:loadCinematics()
+	Game.ShowStatusText('player reloaded')
+end
+
 PlayerInput.init = function(self)
 	local playerInputEvents = {
 		[const.Keys.O] = function()
 			alm.Player:stop()
 		end,
 		[const.Keys.P] = function()
-			alm.Player:play('Temple of Baa')
+			alm.Player:play('Test Indoor')
 		end,
 		[const.Keys.K] = function()
 			alm.Player:rewind()
@@ -18,9 +25,10 @@ PlayerInput.init = function(self)
 			alm.Player:toggleDirection()
 		end,
 		[const.Keys.D] = function()
-			alm.Player:loadCinematics()
-			Game.ShowStatusText('cinematics reloaded')
+			alm.Player:stop()
+			self:reload()
 		end,
+		
 	}
 
 	function events.KeyDown(t)
