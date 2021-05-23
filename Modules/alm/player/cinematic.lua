@@ -1,3 +1,5 @@
+-- Cinematic object prototype
+
 alm.Timeline = require('alm.core.timeline')
 
 return {

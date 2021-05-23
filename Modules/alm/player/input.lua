@@ -1,11 +1,6 @@
-local PlayerInput = {}
+-- Key bindings used to control the player
 
-PlayerInput.reload = function(self)
-	package.loaded['alm.player.main'] = nil
-	alm.Player = require('alm.player.main')
-	alm.Player:loadCinematics()
-	Game.ShowStatusText('player reloaded')
-end
+local PlayerInput = {}
 
 PlayerInput.init = function(self)
 	local playerInputEvents = {
@@ -26,9 +21,8 @@ PlayerInput.init = function(self)
 		end,
 		[const.Keys.D] = function()
 			alm.Player:stop()
-			self:reload()
+			alm.Player:reload()
 		end,
-		
 	}
 
 	function events.KeyDown(t)

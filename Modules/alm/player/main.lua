@@ -1,12 +1,18 @@
-local BaseCinematic = require('alm.player.cinematic')
-local Time = require('alm.core.time')
-local Input = require('alm.player.input')
+-- This module is made to make playing timelines easier
+-- it abstracts it to just alm.Player.play('name') removing the need to require files
+-- it also allows to isolate the code for the cinematics into separate files and supports
+-- refreshing the code without having to restart the game
 
 local Player = {
 	cinematics = {},
 	cinematic = nil,
 	isPlaying = false,
 }
+
+local Time = require('alm.core.time')
+
+Player.Loader = require('alm.player.loader')
+Player.Input = require('alm.player.input')
 
 Player.fastForward = function(self)
 	local time = Time.ticksToSeconds(self.cinematic.t.time) + 1
@@ -76,24 +82,18 @@ Player.set = function(self, title)
 	end
 end
 
-Player.loadCinematics = function(self)
-	self.cinematics = {}
-	for s in path.find(AppPath .. "scripts/modules/alm/player/cinematics/*.lua") do
-		local filename = path.name(s)
-		filename = filename:sub(0, #filename - 4)
-		s = 'alm.player.cinematics.'  .. filename
-		package.loaded[s] = nil
-		local newCinematic = require(s)
-		newCinematic.filename = filename
-		newCinematic = BaseCinematic:new(newCinematic)
-		newCinematic:create()
-		self.cinematics[newCinematic.title] = newCinematic
-	end
+Player.reload = function(self)
+	self.cinematics = nil
+	self.cinematic = nil
+	self.Loader = nil
+	package.loaded['alm.player.loader'] = nil
+	self.Loader = require('alm.player.loader')
+	self.cinematics = self.Loader:loadCinematics()
+	Game.ShowStatusText('player reloaded')
 end
 
 Player.init = function(self)
-	self:loadCinematics()
-	self.Input = Input
+	self.cinematics = self.Loader:loadCinematics()
 	self.Input:init()
 end
 

@@ -64,7 +64,7 @@ return {
 		self.t:to(camera, {X = -15515, Y = 128, Z = -191, Yaw = 1024, Pitch = 0, IndoorFOV = 35, Duration = 1,
 			onEnd = function()
 				self:pause()
-				function evt.LoadMapScripts(t)
+				function events.AfterLoadMap(t)
 					self:play()
 				end
 				evt.MoveToMap(4885, -7698, 96, 1536, 0, 0, 0, 0, 'outd3.odm')
