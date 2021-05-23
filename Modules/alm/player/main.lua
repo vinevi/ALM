@@ -73,12 +73,13 @@ Player.togglePause = function(self)
 end
 
 Player.set = function(self, title)
-	if (self.cinematic) then
+	if (self.cinematic and self.cinematic.title == title) then
 		self.cinematic.t:seek(0)
 	end
 	local cinematic = self.cinematics[title]
 	if (cinematic) then
 		self.cinematic = cinematic
+		self.cinematic:create()
 	end
 end
 
@@ -89,7 +90,7 @@ Player.reload = function(self)
 	package.loaded['alm.player.loader'] = nil
 	self.Loader = require('alm.player.loader')
 	self.cinematics = self.Loader:loadCinematics()
-	Game.ShowStatusText('player reloaded')
+	Game.ShowStatusText('cinematics reloaded')
 end
 
 Player.init = function(self)

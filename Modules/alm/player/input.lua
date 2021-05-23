@@ -23,6 +23,7 @@ PlayerInput.init = function(self)
 			alm.Player:stop()
 			alm.Player:reload()
 		end,
+		
 	}
 
 	function events.KeyDown(t)

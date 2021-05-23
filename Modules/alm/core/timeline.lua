@@ -90,7 +90,6 @@ Timeline.play = function(self)
 		keyframe.object:detach()
 	end
 	self.onTimer = function()
-		Game.ShowStatusText(self.time)
 		self:onTick()
 	end
 	self.timer = Timer(self.onTimer, const.Second)

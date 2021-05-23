@@ -9,6 +9,7 @@ local Keyframe = {
 	object = {}, -- object with properties
 	Duration = 1, -- in seconds (converted to ticks later)
 	Delay = 0,
+	Interpolation = 'linear',
 	progress = 0,
 	time = 0,
 	start = 0,
@@ -33,6 +34,7 @@ Keyframe.to = function(self, object, properties)
 	if (self.Duration == 0) then
 		self.Duration = 1
 	end
+	self.Interpolation= properties.Interpolation or 'linear'
 	self.onBegin = properties.onBegin or function() end
 	self.onEnd = properties.onEnd or function() end
 end
@@ -62,13 +64,26 @@ Keyframe.seek = function(self, tick)
 	end
 	for key, targetValue in pairs(self.propertiesTo) do
 		if(self.object[key]) then
-			local initialValue = self.propertiesFrom[key]
-			local newValue = Interpolation.linear(initialValue, targetValue, self.progress)
-			if(self.object[key .. 'Wrap']) then
-				newValue = newValue % self.object[key .. 'Wrap']
-			end
-			self.object['set' .. key](self.object, math.floor(newValue))
+			self:adjustProperty(key, targetValue)
 		end
+	end
+end
+
+Keyframe.adjustProperty = function(self, key, targetValue)
+	local initialValue = self.propertiesFrom[key]
+	local newValue = Interpolation[self.Interpolation](initialValue, targetValue, self.progress)
+	newValue = math.floor(newValue)
+	
+	-- if needs wrapping (like direction property)
+	if(self.object[key .. 'Wrap']) then
+		newValue = newValue % self.object[key .. 'Wrap']
+	end
+
+	-- if has a setter
+	if(self.object['set' .. key]) then
+		self.object['set' .. key](self.object, newValue)
+	else
+		self.object[key] = newValue
 	end
 end
 

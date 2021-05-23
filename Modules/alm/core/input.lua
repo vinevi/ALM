@@ -21,9 +21,6 @@ Input.init = function()
 			timeline:to(alm.Camera, {X = -14020, Y = -10172, Z = 883, Yaw = 1048, Pitch = -50, Duration = 8})
 			timeline:play()
 		end,
-		[const.Keys.N] = function()
-			
-		end,
 	}
 
 	function events.KeyDown(t)

@@ -15,7 +15,6 @@ Loader.loadCinematics = function(self)
 		local newCinematic = require(s)
 		newCinematic.filename = filename
 		newCinematic = BaseCinematic:new(newCinematic)
-		newCinematic:create()
 		cinematics[newCinematic.title] = newCinematic
 	end
 	return cinematics
