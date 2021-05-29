@@ -8,7 +8,7 @@ PlayerInput.init = function(self)
 			alm.Player:stop()
 		end,
 		[const.Keys.P] = function()
-			alm.Player:play('Temple of Baa')
+			alm.Player:play('New Sorpigal 3')
 		end,
 		[const.Keys.K] = function()
 			alm.Player:rewind()
